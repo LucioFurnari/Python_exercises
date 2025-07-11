@@ -2,14 +2,14 @@ from tkinter import *
 
 root = Tk()
 
-frame = Frame(root)
-frame.pack()
+frame = Frame(root, width=650)
+frame.pack(padx=10, pady=10)
 
 #----------------------------------- calculator input -----------------------------------#
 
 calculatorInput = Entry(frame)
 calculatorInput.grid(row=1,column=1, padx=10, pady=10, columnspan=4)
-calculatorInput.config(background="#eaeaea", fg="black", justify="right", width=40)
+calculatorInput.config(background="#eaeaea", fg="black", justify="right")
 
 #----------------------------------- calculator buttons -----------------------------------#
 
@@ -21,5 +21,14 @@ number_9 = Button(frame, text="9", width=3)
 number_9.grid(row="2", column="3")
 multiplicationButton = Button(frame, text="x", width=3)
 multiplicationButton.grid(row="2", column="4")
+
+number_4 = Button(frame, text="7", width=3)
+number_4.grid(row="3",column="1")
+number_5 = Button(frame, text="8", width=3)
+number_5.grid(row="3", column="2")
+number_6 = Button(frame, text="9", width=3)
+number_6.grid(row="3", column="3")
+subtractButton = Button(frame, text="-", width=3)
+subtractButton.grid(row="3", column="4")
 
 root.mainloop()
