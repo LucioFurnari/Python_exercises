@@ -5,18 +5,37 @@ root = Tk()
 frame = Frame(root, width=650, background="gray",  padx=10, pady=10)
 frame.pack( padx=10, pady=10)
 
+#----------------------------------- global vars -----------------------------------#
+
+operation = ""
+result = 0
+
 #----------------------------------- calculator input -----------------------------------#
 
-inputValues = StringVar()
+inputValues = StringVar(value="0")
 
 calculatorInput = Entry(frame, textvariable=inputValues)
 calculatorInput.grid(row=1,column=1, padx=10, pady=10, columnspan=4)
 calculatorInput.config(background="#eaeaea", fg="black", justify="right")
 
+#----------------------------------- calculator operations -----------------------------------#
+
+def addOperation():
+  global operation
+  operation = "add"
+
 #----------------------------------- write calculator -----------------------------------#
 
 def writeCalculator(num):
-  inputValues.set(inputValues.get() + num)
+  global operation
+
+  if inputValues.get()[0] == "0":
+    inputValues.set("")
+  if (operation != ""):
+    inputValues.set(num)
+    operation = ""
+  else:
+    inputValues.set(inputValues.get() + num)
 
 #----------------------------------- calculator buttons -----------------------------------#
 
@@ -53,7 +72,7 @@ commaButton = Button(frame, text=",", width=3, command=lambda: writeCalculator("
 commaButton.grid(row="5", column="2")
 equalButton = Button(frame, text="=", width=3)
 equalButton.grid(row="5", column="3")
-sumButton = Button(frame, text="+", width=3)
+sumButton = Button(frame, text="+", width=3, command=addOperation)
 sumButton.grid(row="5", column="4")
 
 root.mainloop()
