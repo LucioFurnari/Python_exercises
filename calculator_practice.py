@@ -9,6 +9,9 @@ frame.pack( padx=10, pady=10)
 
 operation = ""
 result = 0
+num1 = 0
+num2 = 0
+resetDisplay = False
 
 #----------------------------------- calculator input -----------------------------------#
 
@@ -20,22 +23,61 @@ calculatorInput.config(background="#eaeaea", fg="black", justify="right")
 
 #----------------------------------- calculator operations -----------------------------------#
 
+def calculateResult():
+  global operation
+  global result
+  global num1
+  global num2
+
+  if (operation == "add"):
+    result = num1 + num2
+    inputValues.set(result)
+    num1 = result
+    operation = ""
+  if (operation == "sub"):
+    result -= int(inputValues.get())
+  if (operation == "mult"):
+    result *= int(inputValues.get())
+  if (operation == "div"):
+    result /= int(inputValues.get())
+
+  operation = ""
+
 def addOperation():
   global operation
+  global result
+  global resetDisplay
+
   operation = "add"
+  resetDisplay = True
+
+  # result = int(inputValues.get())
+  # print(result)
+  # inputValues.set(result)
 
 #----------------------------------- write calculator -----------------------------------#
 
 def writeCalculator(num):
   global operation
+  global resetDisplay
+  global num1
+  global num2
 
   if inputValues.get()[0] == "0":
     inputValues.set("")
+
   if (operation != ""):
-    inputValues.set(num)
-    operation = ""
+    if (resetDisplay):
+      inputValues.set(num)
+      num2 = int(inputValues.get())
+      resetDisplay = False
+    else:
+      inputValues.set(inputValues.get() + num)
+      num2 = int(inputValues.get())
   else:
     inputValues.set(inputValues.get() + num)
+    num1 = int(inputValues.get())
+    print(num1)
 
 #----------------------------------- calculator buttons -----------------------------------#
 
@@ -70,7 +112,7 @@ number_0 = Button(frame, text="0", width=3, command=lambda: writeCalculator("0")
 number_0.grid(row="5", column="1")
 commaButton = Button(frame, text=",", width=3, command=lambda: writeCalculator("."))
 commaButton.grid(row="5", column="2")
-equalButton = Button(frame, text="=", width=3)
+equalButton = Button(frame, text="=", width=3, command=calculateResult)
 equalButton.grid(row="5", column="3")
 sumButton = Button(frame, text="+", width=3, command=addOperation)
 sumButton.grid(row="5", column="4")
