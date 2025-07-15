@@ -13,6 +13,13 @@ variousProducts = [
   ("Toy Truck", 20, "Toy")
 ]
 
+cursor.execute("SELECT * FROM PRODUCTS")
+productsList = cursor.fetchall()
+
+for product in productsList:
+  print(f"Name of article: {product[0]}, price: {product[1]}, section: {product[2]}")
+
+
 # cursor.executemany("INSERT INTO PRODUCTS VALUES (?,?,?)", variousProducts)
 
 db.commit()
