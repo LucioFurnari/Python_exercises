@@ -65,5 +65,19 @@ directionLabel.grid(row=4, column=0,  sticky="e", padx=10, pady=10)
 commentLabel =  Label(inputsFrame, text="Comment:")
 commentLabel.grid(row=5, column=0,  sticky="e", padx=10, pady=10)
 
+#------------- Crud buttons -------------#
+buttonsFrame = Frame(root)
+buttonsFrame.pack()
+
+createButton = Button(buttonsFrame, text="Create")
+createButton.grid(row=1, column=0, sticky="e", padx=10, pady=10)
+readButton = Button(buttonsFrame, text="Read")
+readButton.grid(row=1, column=1, sticky="e", padx=10, pady=10)
+updateButton = Button(buttonsFrame, text="Update")
+updateButton.grid(row=1, column=2, sticky="e", padx=10, pady=10)
+deleteButton = Button(buttonsFrame, text="Delete")
+deleteButton.grid(row=1, column=3, sticky="e", padx=10, pady=10)
+
+
 #----------------------------------------#
 root.mainloop()
