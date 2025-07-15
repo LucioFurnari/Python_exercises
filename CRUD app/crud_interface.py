@@ -28,7 +28,7 @@ crudMenu.add_command(label="Delete")
 menuNav.add_cascade(label="Crud", menu=crudMenu)
 
 
-#------------- Inputs frame -------------#
+#------------- Inputs frame and entries -------------#
 inputsFrame = Frame(root)
 inputsFrame.pack()
 
@@ -51,4 +51,19 @@ scrollVert.grid(row=5, column=2, sticky="nsew")
 
 commentaryText.config(yscrollcommand=scrollVert.set)
 
+#------------- Inputs labels -------------#
+idLabel = Label(inputsFrame, text="ID:")
+idLabel.grid(row=0, column=0, sticky="e", padx=10, pady=10)
+nameLabel = Label(inputsFrame, text="Name:")
+nameLabel.grid(row=1, column=0,  sticky="e", padx=10, pady=10)
+passLabel = Label(inputsFrame, text="Password:")
+passLabel.grid(row=2, column=0,  sticky="e", padx=10, pady=10)
+lastnameLabel =  Label(inputsFrame, text="Last name:")
+lastnameLabel.grid(row=3, column=0,  sticky="e", padx=10, pady=10)
+directionLabel =  Label(inputsFrame, text="Direction:")
+directionLabel.grid(row=4, column=0,  sticky="e", padx=10, pady=10)
+commentLabel =  Label(inputsFrame, text="Comment:")
+commentLabel.grid(row=5, column=0,  sticky="e", padx=10, pady=10)
+
+#----------------------------------------#
 root.mainloop()
