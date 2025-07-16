@@ -3,12 +3,10 @@ import sqlite3
 class DataBaseManager:
   def __init__(self, db_name="Users"):
     self.db_name = db_name
-    self.connection = None
-    self.cursor = None
-
-  def connect_and_init(self):
     self.connection = sqlite3.connect(self.db_name)
     self.cursor = self.connection.cursor()
+
+  def connect_and_init(self):
 
     try:
       self.cursor.execute('''
@@ -28,3 +26,18 @@ class DataBaseManager:
         return False
       else:
         raise
+
+  def create(self, user_name, password, last_name, direction, comment):
+    try:
+      self.cursor.execute(
+          '''
+          INSERT INTO DATA_USERS (USER_NAME, PASSWORD, LAST_NAME, DIRECTION, COMMENT)
+          VALUES (?, ?, ?, ?, ?)
+          ''',
+          (user_name, password, last_name, direction, comment)
+        )
+      self.connection.commit()
+      return True
+    except Exception as error:
+      print(f"Error creating user: {error}")
+      return False
