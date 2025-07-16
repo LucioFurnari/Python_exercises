@@ -15,18 +15,35 @@ def connect_db():
   except Exception as e:
     messagebox.showerror("Error", f"An error occurred: {e}")
 
+def close_app():
+  root.destroy()
+
+userId = StringVar()
+userName = StringVar()
+userLastname = StringVar()
+userPassword = StringVar()
+userDirection = StringVar()
+
+def clean_entries():
+  userId.set("")
+  userName.set("")
+  userLastname.set("")
+  userPassword.set("")
+  userDirection.set("")
+  commentaryText.delete(1.0, END)
+
 menuNav = Menu(root)
 root.config(menu=menuNav, width=300, height=300)
 
 #------------- DB Menu -------------#
 dbMenu = Menu(menuNav, tearoff=0)
 dbMenu.add_command(label="Connect", command=connect_db)
-dbMenu.add_command(label="Exit")
+dbMenu.add_command(label="Exit", command=close_app)
 
 menuNav.add_cascade(label="DB", menu=dbMenu)
 
 deleteMenu = Menu(menuNav, tearoff=0)
-deleteMenu.add_command(label="Delete entries")
+deleteMenu.add_command(label="Delete entries", command=clean_entries)
 
 menuNav.add_cascade(label="Delete", menu=deleteMenu)
 #------------- CRUD Menu -------------#
@@ -43,16 +60,20 @@ menuNav.add_cascade(label="Crud", menu=crudMenu)
 inputsFrame = Frame(root)
 inputsFrame.pack()
 
-idInput = Entry(inputsFrame)
+idInput = Entry(inputsFrame, textvariable=userId)
 idInput.grid(row=0, column=1, padx=10, pady=10)
-nameInput = Entry(inputsFrame)
+
+nameInput = Entry(inputsFrame, textvariable=userName)
 nameInput.grid(row=1, column=1, padx=10, pady=10)
-passwordInput = Entry(inputsFrame)
+
+passwordInput = Entry(inputsFrame, textvariable=userPassword)
 passwordInput.grid(row=2, column=1, padx=10, pady=10)
 passwordInput.config(show="*") # Show * instead of text
-lastnameInput = Entry(inputsFrame)
+
+lastnameInput = Entry(inputsFrame, textvariable=userLastname)
 lastnameInput.grid(row=3, column=1, padx=10, pady=10)
-directionInput = Entry(inputsFrame)
+
+directionInput = Entry(inputsFrame, textvariable=userDirection)
 directionInput.grid(row=4, column=1, padx=10, pady=10)
 
 commentaryText = Text(inputsFrame, width=16, height=5)
