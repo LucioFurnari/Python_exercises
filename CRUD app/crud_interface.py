@@ -5,6 +5,7 @@ from DB_Methods import DataBaseManager
 root = Tk()
 db = DataBaseManager()
 
+#------------- Functions -------------#
 def connect_db():
   try:
       created = db.connect_and_init()
@@ -32,10 +33,20 @@ def clean_entries():
   userDirection.set("")
   commentaryText.delete(1.0, END)
 
+def create_user():
+  try:
+    created = db.create(nameInput.get(), passwordInput.get(), lastnameInput.get(), directionInput.get(), commentaryText.get(1.0, END))
+    if created:
+      messagebox.showinfo("User", "User created successfully.")
+    else:
+      messagebox.showinfo("User", "Error creating user.")
+  except Exception as e:
+    messagebox.showerror("Error", f"An error occurred: {e}")
+
+#------------- DB Menu -------------#
 menuNav = Menu(root)
 root.config(menu=menuNav, width=300, height=300)
 
-#------------- DB Menu -------------#
 dbMenu = Menu(menuNav, tearoff=0)
 dbMenu.add_command(label="Connect", command=connect_db)
 dbMenu.add_command(label="Exit", command=close_app)
@@ -101,7 +112,7 @@ commentLabel.grid(row=5, column=0,  sticky="e", padx=10, pady=10)
 buttonsFrame = Frame(root)
 buttonsFrame.pack()
 
-createButton = Button(buttonsFrame, text="Create")
+createButton = Button(buttonsFrame, text="Create", command=create_user)
 createButton.grid(row=1, column=0, sticky="e", padx=10, pady=10)
 readButton = Button(buttonsFrame, text="Read")
 readButton.grid(row=1, column=1, sticky="e", padx=10, pady=10)
