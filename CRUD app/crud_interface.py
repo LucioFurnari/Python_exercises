@@ -1,15 +1,26 @@
 from tkinter import *
 from tkinter import messagebox
-import sqlite3
+from DB_Methods import DataBaseManager
 
 root = Tk()
+db = DataBaseManager()
+
+def connect_db():
+  try:
+      created = db.connect_and_init()
+      if created:
+        messagebox.showinfo("Database", "Database and table created successfully.")
+      else:
+        messagebox.showinfo("Database", "Table already exists.")
+  except Exception as e:
+    messagebox.showerror("Error", f"An error occurred: {e}")
 
 menuNav = Menu(root)
 root.config(menu=menuNav, width=300, height=300)
 
 #------------- DB Menu -------------#
 dbMenu = Menu(menuNav, tearoff=0)
-dbMenu.add_command(label="Connect")
+dbMenu.add_command(label="Connect", command=connect_db)
 dbMenu.add_command(label="Exit")
 
 menuNav.add_cascade(label="DB", menu=dbMenu)
