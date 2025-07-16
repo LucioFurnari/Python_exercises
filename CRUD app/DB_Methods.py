@@ -1,11 +1,17 @@
 import sqlite3
 
-def connectionDb():
-  db = sqlite3.connect("Users")
-  cursor = db.cursor()
+class DataBaseManager:
+  def __init__(self, db_name="Users"):
+    self.db_name = db_name
+    self.connection = None
+    self.cursor = None
 
-  try:
-    cursor.execute('''
+  def connect_and_init(self):
+    self.connection = sqlite3.connect(self.db_name)
+    self.cursor = self.connection.cursor()
+
+    try:
+      self.cursor.execute('''
       CREATE TABLE DATA_USERS (
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
         USER_NAME VARCHAR(50),
@@ -14,8 +20,11 @@ def connectionDb():
         DIRECTION VARCHAR(50),
         COMMENT VARCHAR(100)
       )
-    ''')
-
-    return True
-  except:
-    return False
+      ''')
+      self.connection.commit()
+      return True
+    except sqlite3.OperationalError as error:
+      if "already exists" in str(error):
+        return False
+      else:
+        raise
