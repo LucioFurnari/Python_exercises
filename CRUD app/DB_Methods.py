@@ -55,3 +55,19 @@ class DataBaseManager:
     except Exception as error:
       print(f"Error reading user: {error}")
       return None
+
+  def update_user(self, user_id, user_name, password, last_name, direction, comment):
+    try:
+      self.cursor.execute(
+        '''
+        UPDATE DATA_USERS
+        SET USER_NAME = ?, PASSWORD = ?, LAST_NAME = ?, DIRECTION = ?, COMMENT = ?
+        WHERE ID = ?
+        ''',
+        (user_name, password, last_name, direction, comment, user_id)
+      )
+      self.connection.commit()
+      return True
+    except Exception as error:
+      print(f"Error updating the user: {error}")
+      return False
