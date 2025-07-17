@@ -43,6 +43,10 @@ def create_user():
   except Exception as e:
     messagebox.showerror("Error", f"An error occurred: {e}")
 
+def get_user():
+  result = db.read_user(idInput.get())
+  print(result)
+
 #------------- DB Menu -------------#
 menuNav = Menu(root)
 root.config(menu=menuNav, width=300, height=300)
@@ -114,7 +118,7 @@ buttonsFrame.pack()
 
 createButton = Button(buttonsFrame, text="Create", command=create_user)
 createButton.grid(row=1, column=0, sticky="e", padx=10, pady=10)
-readButton = Button(buttonsFrame, text="Read")
+readButton = Button(buttonsFrame, text="Read", command=get_user)
 readButton.grid(row=1, column=1, sticky="e", padx=10, pady=10)
 updateButton = Button(buttonsFrame, text="Update")
 updateButton.grid(row=1, column=2, sticky="e", padx=10, pady=10)

@@ -41,3 +41,17 @@ class DataBaseManager:
     except Exception as error:
       print(f"Error creating user: {error}")
       return False
+
+  def read_user(self, user_id):
+    try:
+      self.cursor.execute(
+        '''
+          SELECT * FROM DATA_USERS WHERE ID = ?
+        ''',
+        (user_id)
+      )
+
+      return self.cursor.fetchone()
+    except Exception as error:
+      print(f"Error reading user: {error}")
+      return None
