@@ -47,6 +47,13 @@ def get_user():
   result = db.read_user(idInput.get())
   print(result)
 
+def delete_user():
+  result = db.delete_user(idInput.get())
+  if result:
+    messagebox.showinfo("User", "User deleted successfully.")
+  else:
+      messagebox.showinfo("User", "Error deleting user.")
+
 #------------- DB Menu -------------#
 menuNav = Menu(root)
 root.config(menu=menuNav, width=300, height=300)
