@@ -71,3 +71,17 @@ class DataBaseManager:
     except Exception as error:
       print(f"Error updating the user: {error}")
       return False
+
+  def delete_user(self, user_id):
+    try:
+      self.cursor.execute(
+        '''
+        DELETE FROM DATA_USERS WHERE ID = ?
+        ''',
+        (user_id)
+      )
+      self.connection.commit()
+      return True
+    except Exception as error:
+      print(f"Error deleting the user: {error}")
+      return False
