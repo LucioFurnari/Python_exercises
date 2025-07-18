@@ -47,6 +47,14 @@ def get_user():
   result = db.read_user(idInput.get())
   print(result)
 
+def update_user():
+  result = db.update_user(idInput.get(), nameInput.get(), passwordInput.get(), lastnameInput.get(), directionInput.get(), commentaryText.get(1.0, END))
+  if result:
+    messagebox.showinfo("User", "User updated successfully.")
+  else:
+      messagebox.showinfo("User", "Error updating user.")
+
+
 def delete_user():
   result = db.delete_user(idInput.get())
   if result:
