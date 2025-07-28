@@ -10,7 +10,7 @@ class DataBaseManager:
 
     try:
       self.cursor.execute('''
-      CREATE TABLE DATA_USERS (
+      CREATE TABLE IF NOT EXISTS DATA_USERS (
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
         USER_NAME TEXT NOT NULL UNIQUE,
         PASSWORD TEXT NOT NULL,
@@ -21,11 +21,9 @@ class DataBaseManager:
       ''')
       self.connection.commit()
       return True
-    except sqlite3.OperationalError as error:
-      if "already exists" in str(error):
+    except sqlite3.Error as error:
+        print("Error trying to create the table:", error)
         return False
-      else:
-        raise
 
   def create(self, user_name, password, last_name, direction, comment):
     try:
