@@ -12,11 +12,11 @@ class DataBaseManager:
       self.cursor.execute('''
       CREATE TABLE DATA_USERS (
         ID INTEGER PRIMARY KEY AUTOINCREMENT,
-        USER_NAME VARCHAR(50),
-        PASSWORD VARCHAR(50),
-        LAST_NAME VARCHAR(50),
-        DIRECTION VARCHAR(50),
-        COMMENT VARCHAR(100)
+        USER_NAME TEXT NOT NULL UNIQUE,
+        PASSWORD TEXT NOT NULL,
+        LAST_NAME TEXT,
+        DIRECTION TEXT,
+        COMMENT TEXT
       )
       ''')
       self.connection.commit()
@@ -48,7 +48,7 @@ class DataBaseManager:
         '''
           SELECT * FROM DATA_USERS WHERE ID = ?
         ''',
-        (user_id)
+        (user_id,)
       )
 
       return self.cursor.fetchone()
