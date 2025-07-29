@@ -1,10 +1,14 @@
 import sqlite3
+import bcrypt
 
 class DataBaseManager:
   def __init__(self, db_name="Users"):
     self.db_name = db_name
     self.connection = sqlite3.connect(self.db_name)
     self.cursor = self.connection.cursor()
+
+  def close(self):
+    self.connection.close()
 
   def connect_and_init(self):
 
@@ -27,15 +31,19 @@ class DataBaseManager:
 
   def create(self, user_name, password, last_name, direction, comment):
     try:
+      hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
       self.cursor.execute(
           '''
           INSERT INTO DATA_USERS (USER_NAME, PASSWORD, LAST_NAME, DIRECTION, COMMENT)
           VALUES (?, ?, ?, ?, ?)
           ''',
-          (user_name, password, last_name, direction, comment)
+          (user_name, hashed_password, last_name, direction, comment)
         )
       self.connection.commit()
       return True
+    except sqlite3.IntegrityError:
+      print("The name already exists.")
+      return False
     except Exception as error:
       print(f"Error creating user: {error}")
       return False
@@ -44,7 +52,7 @@ class DataBaseManager:
     try:
       self.cursor.execute(
         '''
-          SELECT * FROM DATA_USERS WHERE ID = ?
+          SELECT ID, USER_NAME, LAST_NAME, DIRECTION, COMMENT FROM DATA_USERS WHERE ID = ?
         ''',
         (user_id,)
       )
@@ -56,13 +64,14 @@ class DataBaseManager:
 
   def update_user(self, user_id, user_name, password, last_name, direction, comment):
     try:
+      hashed_password = bcrypt.hashpw(plain_password.encode('utf-8'), bcrypt.gensalt())
       self.cursor.execute(
         '''
         UPDATE DATA_USERS
         SET USER_NAME = ?, PASSWORD = ?, LAST_NAME = ?, DIRECTION = ?, COMMENT = ?
         WHERE ID = ?
         ''',
-        (user_name, password, last_name, direction, comment, user_id)
+        (user_name, hashed_password, last_name, direction, comment, user_id)
       )
       self.connection.commit()
       return True
