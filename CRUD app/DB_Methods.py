@@ -62,7 +62,7 @@ class DataBaseManager:
       print(f"Error reading user: {error}")
       return None
 
-  def update_user(self, user_id, user_name, password, last_name, direction, comment):
+  def update_user(self, user_id, user_name, plain_password, last_name, direction, comment):
     try:
       hashed_password = bcrypt.hashpw(plain_password.encode('utf-8'), bcrypt.gensalt())
       self.cursor.execute(
