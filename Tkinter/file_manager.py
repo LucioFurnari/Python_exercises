@@ -14,6 +14,7 @@ class FileManager():
     self.preview_list = None
     self.files_scrollbar = None
     self.preview_scrollbar = None
+    self.path_label = None
 
     self.setup_ui()
 
@@ -30,6 +31,9 @@ class FileManager():
 
     select_folder_button = tk.Button(controls_frame, text="Select", command=self.select_folder)
     select_folder_button.pack()
+
+    self.path_label = tk.Label(controls_frame, text="Path: ------")
+    self.path_label.pack()
 
     title_files = tk.Label(self.window, text="Files in Folder", font=("Arial", 12, "bold"))
     title_files.grid(
@@ -94,87 +98,56 @@ class FileManager():
         for file in files:
           self.preview_list.insert(tk.END, f"  - {file}")
 
+  def show_files(self, path):
+    if self.files_list:
+      self.files_list.destroy()
+    if self.files_scrollbar:
+      self.files_scrollbar.destroy()
+
+    def show_selection(self, listbox):
+      selection = listbox.curselection()
+      if selection:
+        index = selection[0]
+        file = listbox.get(index)
+        print(f"Archivo seleccionado: {file}")
+
+    # Create frames for files list
+    files_frame = tk.Frame(self.window)
+    files_frame.grid(row=2, column=0, sticky="nsew", padx=(10, 5), pady=(0, 10))
+
+    files_frame.grid_columnconfigure(0, weight=1)
+    files_frame.grid_rowconfigure(0, weight=1)
+
+    # Create list with scrollbar
+    self.files_list = tk.Listbox(files_frame)
+    self.files_scrollbar = tk.Scrollbar(files_frame)
+
+    self.files_list.config(yscrollcommand=self.files_scrollbar.set)
+    self.files_scrollbar.config(command=self.files_list.yview)
+
+    self.files_list.grid(row=0, column=0, sticky="nsew")
+    self.files_scrollbar.grid(row=0, column=1, sticky="ns")
+
+    # Set list
+    try:
+      directory = os.listdir(path)
+
+      for file in directory:
+        file_path = os.path.join(path, file)
+        if os.path.isfile(file_path):
+          name, extension = os.path.splitext(file)
+          self.files_list.insert(tk.END, f"{name}{extension}")
+          self.files_list.bind("<<ListboxSelect>>", lambda e: show_selection(self.files_list))
+    except PermissionError:
+      messagebox.showerror("Error", "No tienes permisos para listar esta carpeta")
+
+  def select_folder(self):
+    path = filedialog.askdirectory()
+    if path:
+      self.path_label.config(text=f"Path: {path}")
+      self.show_files(path)
+      classification = self.organize_files(path)
+      self.show_preview(classification)
+
   def start(self):
     self.window.mainloop()
-
-# window = tk.Tk()
-# window.title("File manager")
-# window.geometry("900x600")
-# window.resizable(False, False)
-
-# def organize_files(folder):
-#   classification = {
-#     "Documents": [],
-#     "Images": [],
-#     "Videos": [],
-#     "Others": []
-#   }
-
-#   for file in folder:
-#     name, extension = os.path.splitext(file)
-#     print(file)
-#     if extension in [".txt", ".pdf"]:
-#       classification["Documents"].append(file)
-
-#   return classification
-
-
-# def show_preview(classification):
-
-#   preview_list = tk.Listbox(window)
-#   preview_list.grid(row=0, column=1)
-
-#   for folder, files in classification.items():
-#     if files:
-#       print(f"📁 {folder}")
-#       preview_list.insert(tk.END, f"📁 {folder}")
-#       for file in files:
-#         print(f"  - {file}")
-#         preview_list.insert(tk.END, f"  - {file}")
-
-# def select_folder():
-#   path = filedialog.askdirectory()
-
-#   path_label.config(text=f"Path: {path}")
-
-#   show_files(path)
-#   directory = os.listdir(path)
-#   classification = organize_files(directory)
-#   show_preview(classification)
-
-# def show_selection(listbox):
-#   selection = listbox.curselection()
-#   if selection:
-#     index = selection[0]
-#     file = listbox.get(index)
-
-# def show_files(path):
-#   directory = os.listdir(path)
-
-#   list = tk.Listbox(window)
-#   scrollbar = tk.Scrollbar(window)
-
-#   list.config(yscrollcommand=scrollbar.set)
-#   scrollbar.config(command=list.yview)
-
-#   list.pack(side="left", fill="both", expand=True)
-#   scrollbar.pack(side="right", fill="y")
-
-#   for file in directory:
-#     name, extension = os.path.splitext(file)
-#     file_path = os.path.join(path, file)
-
-#     if os.path.isfile(file_path):
-#       list.insert(tk.END, f"{name}{extension}")
-#       list.bind("<<ListboxSelect>>", lambda e: show_selection(list))
-
-
-# select_folder_label = tk.Label(window, text="Select folder")
-# select_folder_label.pack()
-# select_folder_button = tk.Button(window, text="Select", command=select_folder)
-# select_folder_button.pack()
-
-# path_label = tk.Label(window, text="Path: ------")
-# path_label.pack()
-
-# window.mainloop()
