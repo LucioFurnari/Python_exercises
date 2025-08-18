@@ -40,7 +40,37 @@ class FileManager():
       row=1, column=1, pady=(10,5), sticky="w", padx=10
     )
 
-  def organize_files(self, folder_path)
+  def organize_files(self, folder_path):
+    classification = {
+      "Documents": [],
+      "Images": [],
+      "Video": [],
+      "Audio": [],
+      "Others": []
+    }
+
+    directory = os.listdir(folder_path)
+
+    for file in directory:
+      file_path = os.path.join(folder_path, file)
+
+      if os.path.isfile(file_path):
+        name, extension = os.path.splitext(file)
+        ext_lower = extension.lower()
+
+        if ext_lower in [".txt", ".pdf", ".doc", ".docx", ".rtf"]:
+          classification["Documents"].append(file)
+        elif ext_lower in [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]:
+          classification["Images"].append(file)
+        elif ext_lower in [".mp4", ".avi", ".mkv", ".mov", ".wmv"]:
+          classification["Videos"].append(file)
+        elif ext_lower in [".mp3", ".wav", ".flac", ".aac"]:
+          classification["Audio"].append(file)
+        else:
+          classification["Others"].append(file)
+
+    return classification
+
 
   def start(self):
     self.window.mainloop()
