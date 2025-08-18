@@ -92,7 +92,7 @@ class FileManager():
     self.preview_list.grid(row=0, column=0, sticky="nsew")
     self.preview_scrollbar.grid(row=0, column=1, sticky="ns")
 
-    for folder, files in classification:
+    for folder, files in classification.items():
       if files:
         self.preview_list.insert(tk.END, f"📁 {folder}")
         for file in files:
@@ -151,3 +151,7 @@ class FileManager():
 
   def start(self):
     self.window.mainloop()
+
+
+app = FileManager()
+app.start()
