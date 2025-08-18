@@ -71,6 +71,28 @@ class FileManager():
 
     return classification
 
+  def show_preview(self, classification):
+    if self.preview_list:
+      self.preview_list.destroy()
+    if self.preview_scrollbar:
+      self.preview_scrollbar.destroy()
+
+    # Create frame for preview list
+    preview_frame = tk.Frame(self.window)
+    preview_frame.grid(row=2, column=1, sticky="nsew", padx=(5, 10), pady=(0, 10))
+    preview_frame.grid_columnconfigure(0, weight=1)
+    preview_frame.grid_rowconfigure(0, weight=1)
+
+    self.preview_list = tk.Listbox(preview_frame)
+    self.preview_scrollbar = tk.Scrollbar(preview_frame)
+    self.preview_list.grid(row=0, column=0, sticky="nsew")
+    self.preview_scrollbar.grid(row=0, column=1, sticky="ns")
+
+    for folder, files in classification:
+      if files:
+        self.preview_list.insert(tk.END, f"📁 {folder}")
+        for file in files:
+          self.preview_list.insert(tk.END, f"  - {file}")
 
   def start(self):
     self.window.mainloop()
