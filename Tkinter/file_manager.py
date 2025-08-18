@@ -7,19 +7,51 @@ window.title("File manager")
 window.geometry("900x600")
 window.resizable(False, False)
 
+def organize_files(folder):
+  classification = {
+    "Documents": [],
+    "Images": [],
+    "Videos": [],
+    "Others": []
+  }
+
+  for file in folder:
+    name, extension = os.path.splitext(file)
+    print(file)
+    if extension in [".txt", ".pdf"]:
+      classification["Documents"].append(file)
+
+  return classification
+
+
+def show_preview(classification):
+
+  preview_list = tk.Listbox(window)
+  preview_list.grid(row=0, column=1)
+
+  for folder, files in classification.items():
+    if files:
+      print(f"📁 {folder}")
+      preview_list.insert(tk.END, f"📁 {folder}")
+      for file in files:
+        print(f"  - {file}")
+        preview_list.insert(tk.END, f"  - {file}")
+
 def select_folder():
   path = filedialog.askdirectory()
 
   path_label.config(text=f"Path: {path}")
 
   show_files(path)
+  directory = os.listdir(path)
+  classification = organize_files(directory)
+  show_preview(classification)
 
 def show_selection(listbox):
   selection = listbox.curselection()
   if selection:
     index = selection[0]
     file = listbox.get(index)
-    print(f"You selected: {file}")
 
 def show_files(path):
   directory = os.listdir(path)
@@ -38,7 +70,6 @@ def show_files(path):
     file_path = os.path.join(path, file)
 
     if os.path.isfile(file_path):
-      print(file)
       list.insert(tk.END, f"{name}{extension}")
       list.bind("<<ListboxSelect>>", lambda e: show_selection(list))
 
