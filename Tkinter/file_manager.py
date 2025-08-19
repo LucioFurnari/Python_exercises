@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
+import shutil
 import os
 
 
@@ -8,13 +9,16 @@ class FileManager():
     self.window = tk.Tk()
     self.window.title("File manager")
     self.window.geometry("900x600")
-    self. window.resizable(False, False)
+    self.window.resizable(False, False)
+
+    self.directory_path = None
 
     self.files_list = None
     self.preview_list = None
     self.files_scrollbar = None
     self.preview_scrollbar = None
     self.path_label = None
+    self.move_files_button = None
 
     self.setup_ui()
 
@@ -31,6 +35,9 @@ class FileManager():
 
     select_folder_button = tk.Button(controls_frame, text="Select", command=self.select_folder)
     select_folder_button.pack()
+
+    self.move_files_button = tk.Button(controls_frame, text="Move files", command=self.move_files)
+    self.move_files_button.pack()
 
     self.path_label = tk.Label(controls_frame, text="Path: ------")
     self.path_label.pack()
@@ -75,6 +82,46 @@ class FileManager():
 
     return classification
 
+  def move_files(self):
+    classification = {
+      "Documents": { ".txt", ".pdf", ".doc", ".docx", ".rtf" },
+      "Images": {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"},
+      "Video": {".mp4", ".avi", ".mkv", ".mov", ".wmv"},
+      "Audio": {".mp3", ".wav", ".flac", ".aac"},
+    }
+
+    if self.directory_path:
+      directory =  os.listdir(self.directory_path)
+      for file in directory:
+        file_path = os.path.join(self.directory_path, file)
+
+        # Skip directory
+        if os.path.isdir(file_path):
+          continue
+
+        name, file_extension = os.path.splitext(file)
+        file_extension = file_extension.lower()
+
+        # Find the category
+        target_category = "Others" # Default category
+
+        for category, extensions in classification.items():
+          if file_extension in extensions:
+            target_category = category
+            break
+
+        # Create target folder and move file
+        category_path = os.path.join(self.directory_path, target_category)
+        os.makedirs(category_path, exist_ok=True)
+
+        source_path = os.path.join(self.directory_path, file)
+        destination_path = os.path.join(category_path, file)
+
+        try:
+          shutil.move(source_path, destination_path)
+        except Exception as e:
+          print(f"Error moving {file}: {e}")
+
   def show_preview(self, classification):
     if self.preview_list:
       self.preview_list.destroy()
@@ -104,7 +151,7 @@ class FileManager():
     if self.files_scrollbar:
       self.files_scrollbar.destroy()
 
-    def show_selection(self, listbox):
+    def show_selection(listbox):
       selection = listbox.curselection()
       if selection:
         index = selection[0]
@@ -142,11 +189,11 @@ class FileManager():
       messagebox.showerror("Error", "No tienes permisos para listar esta carpeta")
 
   def select_folder(self):
-    path = filedialog.askdirectory()
-    if path:
-      self.path_label.config(text=f"Path: {path}")
-      self.show_files(path)
-      classification = self.organize_files(path)
+    self.directory_path = filedialog.askdirectory()
+    if self.directory_path:
+      self.path_label.config(text=f"Path: {self.directory_path}")
+      self.show_files(self.directory_path)
+      classification = self.organize_files(self.directory_path)
       self.show_preview(classification)
 
   def start(self):
