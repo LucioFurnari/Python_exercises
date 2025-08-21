@@ -52,34 +52,53 @@ class FileManager():
     )
 
   def organize_files(self, folder_path):
-    classification = {
-      "Documents": [],
-      "Images": [],
-      "Video": [],
-      "Audio": [],
-      "Others": []
-    }
+    # classification = {
+    #   "Documents": [],
+    #   "Images": [],
+    #   "Video": [],
+    #   "Audio": [],
+    #   "Others": []
+    # }
+    classification = {}
 
     directory = os.listdir(folder_path)
 
     for file in directory:
       file_path = os.path.join(folder_path, file)
+      if os.path.isdir(file_path):
+        classification[file] = None
 
       if os.path.isfile(file_path):
         name, extension = os.path.splitext(file)
         ext_lower = extension.lower()
 
         if ext_lower in [".txt", ".pdf", ".doc", ".docx", ".rtf"]:
-          classification["Documents"].append(file)
+          if classification["Documents"]:
+            classification["Documents"].append(file)
+          else:
+            classification["Documents"] = []
         elif ext_lower in [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]:
-          classification["Images"].append(file)
+          if classification["Images"]:
+            classification["Images"].append(file)
+          else:
+            classification["Images"] = []
         elif ext_lower in [".mp4", ".avi", ".mkv", ".mov", ".wmv"]:
-          classification["Videos"].append(file)
+          if classification["Video"]:
+            classification["Video"].append(file)
+          else:
+            classification["Video"] = []
         elif ext_lower in [".mp3", ".wav", ".flac", ".aac"]:
-          classification["Audio"].append(file)
+          if classification["Audio"]:
+            classification["Audio"].append(file)
+          else:
+            classification["Audio"] = []
         else:
-          classification["Others"].append(file)
+          if classification["Others"]:
+            classification["Others"].append(file)
+          else:
+            classification["Others"] = []
 
+    print(classification["Documents"])
     return classification
 
   def move_files(self):
@@ -144,6 +163,8 @@ class FileManager():
         self.preview_list.insert(tk.END, f"📁 {folder}")
         for file in files:
           self.preview_list.insert(tk.END, f"  - {file}")
+      else:
+        self.preview_list.insert(tk.END, f"📁 {folder}")
 
   def show_files(self, path):
     if self.files_list:
@@ -181,9 +202,11 @@ class FileManager():
 
       for file in directory:
         file_path = os.path.join(path, file)
-        if os.path.isfile(file_path):
+        if not os.path.isfile(file_path):
+          self.files_list.insert(tk.END, f"📁 {file}")
+        else:
           name, extension = os.path.splitext(file)
-          self.files_list.insert(tk.END, f"{name}{extension}")
+          self.files_list.insert(tk.END, f"  - {file}")
           self.files_list.bind("<<ListboxSelect>>", lambda e: show_selection(self.files_list))
     except PermissionError:
       messagebox.showerror("Error", "No tienes permisos para listar esta carpeta")
