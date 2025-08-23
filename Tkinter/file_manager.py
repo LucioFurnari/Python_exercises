@@ -141,6 +141,8 @@ class FileManager():
         except Exception as e:
           print(f"Error moving {file}: {e}")
 
+      messagebox.showinfo("Success", "Action completed successfully!")
+
   def show_preview(self, classification):
     if self.preview_list:
       self.preview_list.destroy()
