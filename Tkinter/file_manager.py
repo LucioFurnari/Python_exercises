@@ -12,6 +12,12 @@ class FileManager():
     self.window.resizable(False, False)
 
     self.directory_path = None
+    self.classification = {
+      "Documents": { ".txt", ".pdf", ".doc", ".docx", ".rtf" },
+      "Images": {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"},
+      "Video": {".mp4", ".avi", ".mkv", ".mov", ".wmv"},
+      "Audio": {".mp3", ".wav", ".flac", ".aac"},
+    }
 
     self.files_list = None
     self.preview_list = None
@@ -52,62 +58,35 @@ class FileManager():
     )
 
   def organize_files(self, folder_path):
-    # classification = {
-    #   "Documents": [],
-    #   "Images": [],
-    #   "Video": [],
-    #   "Audio": [],
-    #   "Others": []
-    # }
-    classification = {}
+    folder_organized = {}
 
     directory = os.listdir(folder_path)
 
     for file in directory:
       file_path = os.path.join(folder_path, file)
       if os.path.isdir(file_path):
-        classification[file] = None
+        folder_organized[file] = None
 
       if os.path.isfile(file_path):
         name, extension = os.path.splitext(file)
         ext_lower = extension.lower()
 
-        if ext_lower in [".txt", ".pdf", ".doc", ".docx", ".rtf"]:
-          if classification["Documents"]:
-            classification["Documents"].append(file)
-          else:
-            classification["Documents"] = []
-        elif ext_lower in [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"]:
-          if classification["Images"]:
-            classification["Images"].append(file)
-          else:
-            classification["Images"] = []
-        elif ext_lower in [".mp4", ".avi", ".mkv", ".mov", ".wmv"]:
-          if classification["Video"]:
-            classification["Video"].append(file)
-          else:
-            classification["Video"] = []
-        elif ext_lower in [".mp3", ".wav", ".flac", ".aac"]:
-          if classification["Audio"]:
-            classification["Audio"].append(file)
-          else:
-            classification["Audio"] = []
-        else:
-          if classification["Others"]:
-            classification["Others"].append(file)
-          else:
-            classification["Others"] = []
+        # Find the category
+        target_category = "Others" # Default category
 
-    print(classification["Documents"])
-    return classification
+        for category, extensions in self.classification.items():
+          if ext_lower in extensions:
+            target_category = category
+            break
+        
+        if folder_organized[target_category]:
+          folder_organized.append(file)
+        else:
+          folder_organized[target_category] = []
+
+    return folder_organized
 
   def move_files(self):
-    classification = {
-      "Documents": { ".txt", ".pdf", ".doc", ".docx", ".rtf" },
-      "Images": {".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp"},
-      "Video": {".mp4", ".avi", ".mkv", ".mov", ".wmv"},
-      "Audio": {".mp3", ".wav", ".flac", ".aac"},
-    }
 
     if self.directory_path:
       directory =  os.listdir(self.directory_path)
@@ -124,7 +103,7 @@ class FileManager():
         # Find the category
         target_category = "Others" # Default category
 
-        for category, extensions in classification.items():
+        for category, extensions in self.classification.items():
           if file_extension in extensions:
             target_category = category
             break
