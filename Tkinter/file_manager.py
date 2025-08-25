@@ -42,7 +42,7 @@ class FileManager():
     select_folder_button = tk.Button(controls_frame, text="Select", command=self.select_folder)
     select_folder_button.pack()
 
-    self.move_files_button = tk.Button(controls_frame, text="Move files", command=self.move_files)
+    self.move_files_button = tk.Button(controls_frame, text="Move files", command=self.move_files, state="disabled")
     self.move_files_button.pack()
 
     self.path_label = tk.Label(controls_frame, text="Path: ------")
@@ -199,6 +199,8 @@ class FileManager():
       self.show_files(self.directory_path)
       classification = self.organize_files(self.directory_path)
       self.show_preview(classification)
+      
+      self.move_files_button.config(state="active")
 
   def start(self):
     self.window.mainloop()
